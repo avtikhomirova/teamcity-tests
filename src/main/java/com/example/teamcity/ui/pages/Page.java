@@ -17,6 +17,7 @@ public abstract class Page {
     private SelenideElement submitButton = element(Selectors.byType("submit"));
     private SelenideElement savingWaitingMarker = element(Selectors.byId("saving"));
     private SelenideElement pageWaitingMarker = element(Selectors.byDataTest("ring-loader"));
+    private SelenideElement connectionSuccessfulWaitingMarker = element(Selectors.byClass("connectionSuccessful"));
 
     public void submit(){
         submitButton.click();
@@ -27,11 +28,17 @@ public abstract class Page {
         pageWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(1));
     }
 
+    public void waitUntilConnectionSuccessful(){
+        connectionSuccessfulWaitingMarker.shouldBe(Condition.visible, Duration.ofSeconds(30));
+    }
+
     public void waitUntilDataIsSaved(){
         savingWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(1));
     }
 
-    public <T extends PageElement> List<T> generatePageElements(ElementsCollection collection, Function<SelenideElement, T> creator){
+    public  <T extends PageElement> List<T> generatePageElements(
+            ElementsCollection collection,
+            Function<SelenideElement, T> creator) {
         var elements = new ArrayList<T>();
         collection.forEach(webElement -> elements.add(creator.apply(webElement)));
         return elements;

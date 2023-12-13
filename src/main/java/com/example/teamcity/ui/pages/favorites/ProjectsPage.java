@@ -11,7 +11,7 @@ import static com.codeborne.selenide.Selenide.elements;
 
 public class ProjectsPage extends FavoritesPage {
     private static final String FAVOURITE_PROJECTS_URL = "/favorite/projects";
-    private ElementsCollection subprojects = elements(Selectors.byClass("Subproject_container--WE"));
+    private ElementsCollection subprojects = elements(Selectors.byClass("Subproject__container--Px"));
 
     public ProjectsPage open(){
         Selenide.open(FAVOURITE_PROJECTS_URL);

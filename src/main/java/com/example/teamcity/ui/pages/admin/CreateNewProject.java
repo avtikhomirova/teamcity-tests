@@ -23,6 +23,7 @@ public class CreateNewProject extends Page {
         urlInput.sendKeys(url);
         submit();
         waitUntilDataIsSaved();
+        waitUntilConnectionSuccessful();
         return this;
     }
 
@@ -32,6 +33,8 @@ public class CreateNewProject extends Page {
 
         buildTypeNameInput.clear();
         buildTypeNameInput.sendKeys(buildTypeName);
+
+        submit();
     }
 
 }
