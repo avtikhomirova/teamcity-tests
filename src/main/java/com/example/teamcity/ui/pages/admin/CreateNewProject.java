@@ -15,6 +15,7 @@ public class CreateNewProject extends Page {
     private SelenideElement buildTypeNameInput = element(Selectors.byId("buildTypeName"));
     public CreateNewProject open(String parentProjectId){
         Selenide.open("/admin/createObjectMenu.html?projectId=" + parentProjectId + "&showMode=createProjectMenu");
+        waitUntilPageIsLoaded();
         return this;
     }
 

@@ -9,9 +9,6 @@ import com.example.teamcity.api.spec.Specifications;
 import com.example.teamcity.ui.pages.LoginPage;
 import org.testng.annotations.BeforeSuite;
 
-import java.util.HashMap;
-import java.util.Map;
-
 public class BaseUiTest extends BaseTest {
     @BeforeSuite
     public void setupTests() {
