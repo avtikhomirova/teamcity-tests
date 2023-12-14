@@ -1,5 +1,6 @@
 package com.example.teamcity.api;
 
+import com.example.teamcity.api.constants.ErrorMessages;
 import com.example.teamcity.api.enums.Role;
 import com.example.teamcity.api.generators.TestDataGenerator;
 import com.example.teamcity.api.requests.UncheckedRequests;
@@ -14,18 +15,18 @@ import org.testng.annotations.Test;
 public class RolesTest extends BaseApiTest{
 
     @Test
-    public void unathorizedUserShouldNotHaveRightsToCreateProject(){
+    public void unauthorizedUserShouldNotHaveRightsToCreateProject(){
         var testData = testDataStorage.addTestData();
 
         new UncheckedRequests(Specifications.getSpec().unauthSpec()).getProjectRequest()
                 .create(testData.getProject())
                 .then().assertThat().statusCode(HttpStatus.SC_UNAUTHORIZED)
-                .body(Matchers.containsString("Authentication required"));
+                .body(Matchers.containsString(ErrorMessages.PROJECT_UNAUTHORIZED));
 
         uncheckedWithSuperUser.getProjectRequest()
                 .get(testData.getProject().getId())
                 .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND)
-                .body(Matchers.containsString("No project found by locator 'count:1,id:" + testData.getProject().getId()));
+                .body(Matchers.containsString(ErrorMessages.PROJECT_BAD_REQUEST_NOT_FOUND + testData.getProject().getId()));
     }
 
     @Test
@@ -43,6 +44,7 @@ public class RolesTest extends BaseApiTest{
     }
 
     @Test
+    //Failing test.Expected status code <400> but was <200>.
     public void projectAdminShouldHaveRightsToCreateBuildConfigToHisProject(){
         var testData = testDataStorage.addTestData();
 

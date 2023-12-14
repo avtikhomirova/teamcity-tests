@@ -1,5 +1,6 @@
 package com.example.teamcity.api;
 
+import com.example.teamcity.api.constants.ErrorMessages;
 import com.example.teamcity.api.enums.Role;
 import com.example.teamcity.api.generators.RandomData;
 import com.example.teamcity.api.generators.TestDataGenerator;
@@ -111,7 +112,7 @@ public class ProjectCreateTest extends BaseApiTest {
                 .authSpec(testData.getUser()))
                 .create(projectDescription)
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString(" Project name cannot be empty"));
+                .body(Matchers.containsString(ErrorMessages.PROJECT_BAD_REQUEST_NAME_EMPTY));
     }
 
     @Test
@@ -128,7 +129,7 @@ public class ProjectCreateTest extends BaseApiTest {
                 .authSpec(testData.getUser()))
                 .create(projectDescription)
                 .then().assertThat().statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .body(Matchers.containsString("Project ID must not be empty."));
+                .body(Matchers.containsString(ErrorMessages.PROJECT_SERVER_ERROR_ID_EMPTY));
     }
 
     @Test
@@ -149,7 +150,7 @@ public class ProjectCreateTest extends BaseApiTest {
     }
 
     @Test
-    public void negativeProjectCreationDuplicateId() {
+    public void negativeProjectCreationDuplicateName() {
         var testData = testDataStorage.addTestData();
         checkedWithSuperUser.getUserRequest()
                 .create(testData.getUser());
@@ -162,7 +163,7 @@ public class ProjectCreateTest extends BaseApiTest {
                 .authSpec(testData.getUser()))
                 .create(testData.getProject())
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("Project with this name already exists"));
+                .body(Matchers.containsString(ErrorMessages.PROJECT_BAD_REQUEST_NAME_DUPLICATE));
 
     }
 

@@ -1,5 +1,6 @@
 package com.example.teamcity.api;
 
+import com.example.teamcity.api.constants.ErrorMessages;
 import com.example.teamcity.api.enums.Role;
 import com.example.teamcity.api.generators.RandomData;
 import com.example.teamcity.api.generators.TestData;
@@ -14,7 +15,7 @@ import org.apache.http.HttpStatus;
 import org.hamcrest.Matchers;
 import org.testng.annotations.Test;
 
-public class BuildConnfigurationTest extends BaseApiTest {
+public class BuildConfigurationTest extends BaseApiTest {
 
     public Pair<TestData, Project> projectCreation(){
         var testData = testDataStorage.addTestData();
@@ -104,7 +105,7 @@ public class BuildConnfigurationTest extends BaseApiTest {
                 .authSpec(testData.getUser()))
                 .create(buildConfDescription)
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("When creating a build type, non empty name should be provided"));
+                .body(Matchers.containsString(ErrorMessages.BUILD_BAD_REQUEST_NAME_EMPTY));
     }
 
     @Test
@@ -119,7 +120,7 @@ public class BuildConnfigurationTest extends BaseApiTest {
                 .authSpec(testData.getUser()))
                 .create(buildConfDescription)
                 .then().assertThat().statusCode(HttpStatus.SC_INTERNAL_SERVER_ERROR)
-                .body(Matchers.containsString("Build configuration or template ID must not be empty"));
+                .body(Matchers.containsString(ErrorMessages.BUILD_SERVER_ERROR_ID_EMPTY));
     }
 
     @Test
@@ -134,13 +135,14 @@ public class BuildConnfigurationTest extends BaseApiTest {
                 .authSpec(testData.getUser()))
                 .create(buildConfDescription)
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("Build type creation request should contain project node"));
+                .body(Matchers.containsString(ErrorMessages.BUILD_BAD_REQUEST_PROJECT_EMPTY));
     }
 
     @Test
     public void negativeProjectCreationDuplicateId() {
         var projectCreation = projectCreation();
         var testData = projectCreation.getLeft();
+        String expectedMessage = String.format(ErrorMessages.BUILD_CONFIG_ALREADY_USED, testData.getBuildType().getId());
 
         new CheckedBuildConf(Specifications.getSpec()
                 .authSpec(testData.getUser()))
@@ -150,8 +152,7 @@ public class BuildConnfigurationTest extends BaseApiTest {
                 .authSpec(testData.getUser()))
                 .create(testData.getBuildType())
                 .then().assertThat().statusCode(HttpStatus.SC_BAD_REQUEST)
-                .body(Matchers.containsString("The build configuration / template ID \""+ testData.getBuildType().getId() +"\" is already used by another configuration or template"));
-
+                .body(Matchers.containsString(expectedMessage));
     }
 
 
