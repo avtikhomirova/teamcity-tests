@@ -21,8 +21,7 @@ public class ProjectsPage extends FavoritesPage {
 
     public List<ProjectElement> getSubprojects(){
         return generatePageElements(subprojects, ProjectElement::new);
+
     }
-
-
 
 }

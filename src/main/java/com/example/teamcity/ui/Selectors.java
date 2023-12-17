@@ -14,9 +14,8 @@ public class Selectors {
     }
     public static ByAttribute byClass(String value){
         return new ByAttribute("class", value);
+    }public static ByAttribute ByRole(String value){
+        return new ByAttribute("role", value);
     }
-
-
-
 
 }

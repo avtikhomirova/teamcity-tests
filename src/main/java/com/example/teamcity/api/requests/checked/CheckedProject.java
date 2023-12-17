@@ -1,6 +1,7 @@
 package com.example.teamcity.api.requests.checked;
 
 import com.example.teamcity.api.models.Project;
+import com.example.teamcity.api.models.Projects;
 import com.example.teamcity.api.requests.CrudInterface;
 import com.example.teamcity.api.requests.Request;
 import com.example.teamcity.api.requests.unchecked.UncheckedProject;
@@ -43,5 +44,12 @@ public class CheckedProject extends Request implements CrudInterface {
                 .delete(id)
                 .then().assertThat().statusCode(HttpStatus.SC_OK)
                 .extract().asString();
+    }
+
+    public Projects getAllProjects() {
+        return new UncheckedProject(spec)
+                .getAllProjects()
+                .then().assertThat().statusCode(HttpStatus.SC_OK)
+                .extract().as(Projects.class);
     }
 }

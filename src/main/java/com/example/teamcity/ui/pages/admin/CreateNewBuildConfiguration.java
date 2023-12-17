@@ -5,21 +5,22 @@ import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.Selectors;
 import com.example.teamcity.ui.pages.Page;
 
+import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.element;
 
-
-public class CreateNewProject extends Page {
+public class CreateNewBuildConfiguration extends Page {
 
     private SelenideElement urlInput = element(Selectors.byId("url"));
-    private SelenideElement projectNameInput = element(Selectors.byId("projectName"));
     private SelenideElement buildTypeNameInput = element(Selectors.byId("buildTypeName"));
-    public CreateNewProject open(String parentProjectId){
-        Selenide.open("/admin/createObjectMenu.html?projectId=" + parentProjectId + "&showMode=createProjectMenu");
+    private SelenideElement errorBuildTypeName = element(Selectors.byId("error_buildTypeName"));
+
+    public CreateNewBuildConfiguration open(String ProjectId){
+        Selenide.open("/admin/createObjectMenu.html?projectId=" + ProjectId + "&showMode=createBuildTypeMenu");
         waitUntilPageIsLoaded1();
         return this;
     }
 
-    public CreateNewProject createProjectByUrl(String url){
+    public CreateNewBuildConfiguration createBuildConfigurationByUrl(String url){
         urlInput.sendKeys(url);
         submit();
         waitUntilDataIsSaved();
@@ -27,10 +28,7 @@ public class CreateNewProject extends Page {
         return this;
     }
 
-    public void setupProject(String projectName, String buildTypeName){
-        projectNameInput.clear();
-        projectNameInput.sendKeys(projectName);
-
+    public void setupBuildConfiguration(String buildTypeName){
         buildTypeNameInput.clear();
         buildTypeNameInput.sendKeys(buildTypeName);
 
@@ -38,4 +36,10 @@ public class CreateNewProject extends Page {
         waitUntilDataIsSaved();
     }
 
+    public void setupWithError(String buildTypeName){
+        buildTypeNameInput.clear();
+        buildTypeNameInput.sendKeys(buildTypeName);
+        submit();
+        errorBuildTypeName.shouldHave(text("Build configuration name must not be empty"));
+    }
 }
