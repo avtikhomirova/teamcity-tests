@@ -34,7 +34,7 @@ public class ProjectCreateTest extends BaseApiTest {
                 .create(testData.getUser());
 
         var projectDescription = testData.getProject();
-        projectDescription.setName(RandomData.getString(75));
+        projectDescription.setName(RandomData.getString(75, RandomData.StringType.RANDOM_STRING));
 
         var project = new CheckedProject(Specifications.getSpec()
                 .authSpec(testData.getUser()))
@@ -51,7 +51,7 @@ public class ProjectCreateTest extends BaseApiTest {
                 .create(testData.getUser());
 
         var projectDescription = testData.getProject();
-        projectDescription.setId(RandomData.getString(220));
+        projectDescription.setId(RandomData.getString(220, RandomData.StringType.RANDOM_STRING));
 
         var project = new CheckedProject(Specifications.getSpec()
                 .authSpec(testData.getUser()))
@@ -90,7 +90,7 @@ public class ProjectCreateTest extends BaseApiTest {
                 .create(testData.getUser());
 
         var projectDescription = testData.getProject();
-        projectDescription.setId(RandomData.getString(221));
+        projectDescription.setId(RandomData.getString(221, RandomData.StringType.RANDOM_STRING));
 
         new UncheckedProject(Specifications.getSpec()
                 .authSpec(testData.getUser()))

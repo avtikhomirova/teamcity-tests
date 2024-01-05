@@ -55,7 +55,7 @@ public class BuildConfigurationTest extends BaseApiTest {
         var testData = projectCreation.getLeft();
 
         var buildConfDescription = testData.getBuildType();
-        buildConfDescription.setName(RandomData.getString(250));
+        buildConfDescription.setName(RandomData.getString(250, RandomData.StringType.RANDOM_STRING));
 
         var buildConf = new CheckedBuildConf(Specifications.getSpec()
                 .authSpec(testData.getUser()))
@@ -70,7 +70,7 @@ public class BuildConfigurationTest extends BaseApiTest {
         var testData = projectCreation.getLeft();
 
         var buildConfDescription = testData.getBuildType();
-        buildConfDescription.setId(RandomData.getString(220));
+        buildConfDescription.setId(RandomData.getString(220, RandomData.StringType.RANDOM_STRING));
 
         var buildConf = new CheckedBuildConf(Specifications.getSpec()
                 .authSpec(testData.getUser()))
@@ -85,7 +85,7 @@ public class BuildConfigurationTest extends BaseApiTest {
         var testData = projectCreation.getLeft();
 
         var buildConfDescription = testData.getBuildType();
-        buildConfDescription.setId(RandomData.getString(221));
+        buildConfDescription.setId(RandomData.getString(221, RandomData.StringType.RANDOM_STRING));
 
         new UncheckedBuildConfig(Specifications.getSpec()
                 .authSpec(testData.getUser()))

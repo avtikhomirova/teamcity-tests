@@ -39,4 +39,10 @@ public class UncheckedProject extends Request implements CrudInterface {
                 .spec(spec)
                 .delete(PROJECT_ENDPOINT + "/id:" + id);
     }
+
+    public Response getAllProjects() {
+        return given()
+                .spec(spec)
+                .get(PROJECT_ENDPOINT);
+    }
 }
