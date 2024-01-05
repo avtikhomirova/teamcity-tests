@@ -1,9 +1,12 @@
 package com.example.teamcity.ui.pages.admin;
 
+import com.codeborne.selenide.Condition;
 import com.codeborne.selenide.Selenide;
 import com.codeborne.selenide.SelenideElement;
 import com.example.teamcity.ui.Selectors;
 import com.example.teamcity.ui.pages.Page;
+
+import java.time.Duration;
 
 import static com.codeborne.selenide.Condition.text;
 import static com.codeborne.selenide.Selenide.element;
@@ -21,9 +24,9 @@ public class CreateNewBuildConfiguration extends Page {
     }
 
     public CreateNewBuildConfiguration createBuildConfigurationByUrl(String url){
+        urlInput.shouldBe(Condition.visible, Duration.ofSeconds(3));
         urlInput.sendKeys(url);
         submit();
-        waitUntilDataIsSaved();
         waitUntilConnectionSuccessful();
         return this;
     }
@@ -34,6 +37,7 @@ public class CreateNewBuildConfiguration extends Page {
 
         submit();
         waitUntilDataIsSaved();
+        waitUntilPageIsLoaded2();
     }
 
     public void setupWithError(String buildTypeName){

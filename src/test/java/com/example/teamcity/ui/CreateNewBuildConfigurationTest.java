@@ -1,19 +1,23 @@
 package com.example.teamcity.ui;
 
 import com.codeborne.selenide.Condition;
+import com.example.teamcity.api.requests.checked.CheckedBuildConf;
 import com.example.teamcity.api.requests.checked.CheckedProject;
+import com.example.teamcity.api.requests.unchecked.UncheckedBuildConfig;
+import com.example.teamcity.api.requests.unchecked.UncheckedProject;
 import com.example.teamcity.api.spec.Specifications;
 import com.example.teamcity.ui.pages.admin.CreateNewBuildConfiguration;
 import com.example.teamcity.ui.pages.admin.EditProject;
 import com.example.teamcity.ui.pages.favorites.ProjectsPage;
 import com.example.teamcity.ui.pages.project.ProjectPage;
+import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
 public class CreateNewBuildConfigurationTest extends BaseUiTest{
+    private String url = "https://github.com/avtikhomirova/teamcity";
     @Test
     public void authorizedUserShouldBeAbleToCreateNewBuildConfiguration(){
         var testData = testDataStorage.addTestData();
-        var url = "https://github.com/avtikhomirova/teamcity";
 
         loginAsUser(testData.getUser());
 
@@ -38,6 +42,12 @@ public class CreateNewBuildConfigurationTest extends BaseUiTest{
                 .getBuildTypes()
                 .stream().reduce((first, second) -> second).get()
                 .getHeader().shouldHave(Condition.text(testData.getBuildType().getName()));
+
+        var buildConfig = new CheckedBuildConf(Specifications.getSpec().authSpec(testData.getUser()))
+                .get(testData.getBuildType().getName());
+        softy.assertThat(buildConfig.getId()).isNotEmpty();
+        softy.assertThat(testData.getBuildType().getName()).isEqualTo(buildConfig.getName());
+
     }
 
     @Test
@@ -66,5 +76,8 @@ public class CreateNewBuildConfigurationTest extends BaseUiTest{
                 .createBuildConfigurationByUrl(url)
                 .setupWithError(buildConfDescription.getName());
 
+        new UncheckedBuildConfig(Specifications.getSpec().authSpec(testData.getUser()))
+                .get(testData.getBuildType().getName())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
     }
 }

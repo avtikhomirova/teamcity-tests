@@ -1,23 +1,23 @@
 package com.example.teamcity.ui;
 
 import com.codeborne.selenide.Condition;
-import com.example.teamcity.api.generators.RandomData;
 import com.example.teamcity.api.models.Project;
 import com.example.teamcity.api.models.Projects;
 import com.example.teamcity.api.requests.checked.CheckedProject;
+import com.example.teamcity.api.requests.unchecked.UncheckedProject;
 import com.example.teamcity.api.spec.Specifications;
 import com.example.teamcity.ui.pages.favorites.ProjectsPage;
 import com.example.teamcity.ui.pages.admin.CreateNewProject;
+import org.apache.http.HttpStatus;
 import org.testng.annotations.Test;
 
 import java.util.Optional;
 
 public class CreateNewProjectTest extends BaseUiTest {
+    private String url = "https://github.com/avtikhomirova/teamcity";
     @Test
     public void authorizedUserShouldBeAbleCreateNewProject() {
         var testData = testDataStorage.addTestData();
-        var url = "https://github.com/avtikhomirova/teamcity";
-        var nameToFind = testData.getProject().getName();
 
         loginAsUser(testData.getUser());
 
@@ -35,24 +35,24 @@ public class CreateNewProjectTest extends BaseUiTest {
                 .getAllProjects();
 
         Optional<Project> foundProject = allProjects.getProject().stream()
-                .filter(project -> nameToFind.equals(project.getName()))
+                .filter(project -> testData.getProject().getName().equals(project.getName()))
                 .findFirst();
 
-        if (foundProject.isPresent()) {
-            Project project = foundProject.get();
-            softy.assertThat(project.getName()).isEqualTo(testData.getProject().getName());
-        } else {
-            System.out.println("Project not found");
-        }
+        var project = foundProject.get();
+
+        new CheckedProject(Specifications.getSpec().authSpec(testData.getUser()))
+                .get(project.getId());
+        softy.assertThat(project.getId()).isNotEmpty();
+        softy.assertThat(project.getName()).isEqualTo(testData.getProject().getName());
+        softy.assertThat(project.getParentProjectId()).isEqualTo(testData.getProject().getParentProject().getLocator());
+
     }
 
     @Test
-    //Error! We suppose to have an error creating a project with name over 80 symbols.
-    public void authorizedUserShouldNotBeAbleCreateNewProjectWithNameLengthOver80Symbols(){
+    public void authorizedUserShouldNotBeAbleCreateNewProjectWithoutName(){
         var testData = testDataStorage.addTestData();
-        var url = "https://github.com/avtikhomirova/teamcity";
         var projectDescription = testData.getProject();
-        projectDescription.setName(RandomData.getString(76, RandomData.StringType.RANDOM_STRING));
+        projectDescription.setName("");
 
         loginAsUser(testData.getUser());
 
@@ -61,11 +61,13 @@ public class CreateNewProjectTest extends BaseUiTest {
                 .createProjectByUrl(url)
                 .setupProject(projectDescription.getName(), testData.getBuildType().getName());
 
-        //Here we need to add check the project creation error
+        new UncheckedProject(Specifications.getSpec().authSpec(testData.getUser()))
+                .get(projectDescription.getName())
+                .then().assertThat().statusCode(HttpStatus.SC_NOT_FOUND);
 
         new ProjectsPage().open()
                 .getSubprojects()
                 .stream().reduce((first, second) -> second).get()
-                .getHeader().shouldNotHave(Condition.text(testData.getProject().getName()));
+                .getHeader().shouldNotBe(Condition.exactText(testData.getProject().getName()));
     }
 }

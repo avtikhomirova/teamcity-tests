@@ -18,7 +18,7 @@ public abstract class Page {
     private SelenideElement savingWaitingMarker = element(Selectors.byId("saving"));
     private SelenideElement pageWaitingMarker = element(Selectors.byDataTest("ring-loader"));
     private SelenideElement pageContentWaitingMarker = element(Selectors.byClass("ring-loader-inline"));
-    private SelenideElement inProgressWaitingMarker = element(Selectors.byId("inProgress"));
+    private SelenideElement inProgressWaitingMarker = element(Selectors.byId("loadingWarning"));
     private SelenideElement connectionSuccessfulWaitingMarker = element(Selectors.byClass("connectionSuccessful"));
 
     public void submit(){
@@ -37,7 +37,7 @@ public abstract class Page {
         pageContentWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(1));
     }
 
-    public void waitUntilConnectionSuccessful(){
+    public void  waitUntilConnectionSuccessful(){
         connectionSuccessfulWaitingMarker.shouldBe(Condition.visible, Duration.ofSeconds(30));
     }
 

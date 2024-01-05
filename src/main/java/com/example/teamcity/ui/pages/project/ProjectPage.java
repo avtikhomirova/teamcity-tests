@@ -1,5 +1,7 @@
 package com.example.teamcity.ui.pages.project;
 
+
+import com.codeborne.selenide.CollectionCondition;
 import com.codeborne.selenide.ElementsCollection;
 import com.codeborne.selenide.Selenide;
 import com.example.teamcity.ui.Selectors;
@@ -16,13 +18,16 @@ public class ProjectPage extends Page {
 
     public ProjectPage open(String projectName){
         Selenide.open(PROJECT_URL + projectName);
-        waitUntilPageIsLoaded1();
+        waitUntilPageContentIsLoaded();
+        waitUntilPageIsLoaded2();
         return this;
     }
 
     public List<BuildTypeElement> getBuildTypes(){
+        buildTypes.shouldHave(CollectionCondition.sizeGreaterThan(0));
         return generatePageElements(buildTypes, BuildTypeElement::new);
 
     }
+
 
 }
