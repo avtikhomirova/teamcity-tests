@@ -19,9 +19,8 @@ jobs:
 #      - name: Setup host environment variables
 #        run: |
 #          echo "HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')" >> $GITHUB-ENV
-      - name: Set HOST environment variable
-        run: |
-          echo "HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')" >> $GITHUB_ENV
+      - name: Extract IP address and set as HOST variable
+        run: echo "HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')" >> $GITHUB_ENV
 
       - name: Setup host config.properties
         run: |
