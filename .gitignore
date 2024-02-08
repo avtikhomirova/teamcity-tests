@@ -40,3 +40,4 @@ build/
 
 ### Allure ###
 allure-results/
+/teamcity_tests_infrastructure/
