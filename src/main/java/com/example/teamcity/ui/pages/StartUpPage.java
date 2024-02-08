@@ -22,7 +22,7 @@ public class StartUpPage extends Page{
     private SelenideElement header = element(Selectors.byId("header"));
 
     public StartUpPage open(){
-        Selenide.open("/mnt");
+        Selenide.open("/");
         return this;
     }
 
