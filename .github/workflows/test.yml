@@ -24,8 +24,8 @@ jobs:
         run: |
           echo "host=$HOST:8111" >> src/main/resources/config.properties
 
-      - name: Pull Selenoid Chrome/FireFox/..
-        run: docker pull aerokube/selenoid:chrome_119.0
+      - name: Pull Selenoid FireFox
+        run: docker pull selenoid/vnc:firefox_114.0
 
       - name: Run Selenoid
         run: |
