@@ -1,0 +1,72 @@
+name: TeamCity Tests
+
+on: push
+
+jobs:
+  run_temcity_tests:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Setup JDK 17
+        uses: actions/setup-java@v4
+        with:
+          java-version: '17'
+          distribution: 'zulu'
+
+      - name: Install ifconfig
+        run: sudo apt-get update && sudo apt-get install -y net-tools
+
+      - name: Setup host environment variables
+        run: |
+          echo "HOST=$(ifconfig | grep -Eo 'inet (addr:)?([0-9]*\.){3}[0-9]*' | grep -Eo '([0-9]*\.){3}[0-9]*' | grep -v '127.0.0.1')" >> $GITHUB-ENV
+
+      - name: Setup host config.properties
+        run: |
+          echo "host=$HOST:8111" >> src/main/resources/config.properties
+
+      - name: Pull Selenoid Chrome/FireFox/..
+        run: docker pull selenoid/vns-chrome:119.0
+
+      - name: Run Selenoid
+        run: |
+          docker run -d --name selenoid \
+          -p 4444:4444 \
+          -v /var/run/docker.sock:/var/run/docker.sock \
+          -v $(pwd)/config/:/etc/selenoid/:ro \
+          aerokube/selenoid:latest-release
+
+      - name: Run Selenoid UI
+        run: |
+          docker run -d --name selenoid_ui \
+          -p 8080:8080 |
+          aerokube/selenoid-ui \
+          --selenoid-uri http://$HOST:4444
+
+      - name: Run TeamCity Server
+        run: |
+          docker run -u 0 -d --name teamcity-server \
+            -v $(pwd)/datadir:/data/teamcity_server/datadir \
+            -v $(pwd)/logs:/opt/teamcity/logs \
+            -p 8111:8111 \
+            jetbrains/teamcity-server:2023.11.1
+
+      - name: Setup TeamCity Server
+        run: ./mvnw clean test -Dtest=SetupTest#startUpTest
+
+      - name: Set up superUserToken environment variable
+        run: echo "SUPER_USER_TOKEN=$(docker logs teamcity-server | grep 'Super user authentication token' | tail -n 1 | awk '{print $6}')" >> $GITHUB_ENV
+
+      - name: Set up superUserToken config property
+        run: echo "superUserToken=$SUPER_USER_TOKEN" >> src/main/resources/config.properties
+
+      - name: Run TeamCity agent
+        run: |
+            docker run -e SERVER_URL=http://$HOST:8111 -u 0 -d --name teamcity-agent \
+            -v $(pwd)/tmp/teamcity_agent/conf:/data/teamcity_agent/conf \
+            jetbrains/teamcity-agent:2023.11.1
+
+      - name: Set up TeamCity agent
+        run: ./mvnw test -Dtest=SetupTest#setupTeamCityAgentTest
+
+      - name: Run tests
+        run: ./mvnw test -Dgroups=Regression
