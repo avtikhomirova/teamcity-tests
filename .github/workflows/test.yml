@@ -24,8 +24,7 @@ jobs:
             echo "HOST=$(ifconfig | grep -E "([0-9]{1,3}\.){3}[0-9]{1,3}" | grep -v 127.0.0.1 | awk '{ print $2 }' | cut -f2 -d: | head -n1)" >> $GITHUB_ENV
 
       - name: Setup host config.properties
-        run: |
-          echo "host=$HOST:8111" >> src/main/resources/config.properties
+        run: echo "host=$HOST:8111" > src/main/resources/config.properties
 
       - name: Pull Selenoid FireFox
         run: docker pull selenoid/vnc:firefox_114.0
