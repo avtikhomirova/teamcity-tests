@@ -35,12 +35,12 @@ jobs:
           -v $(pwd)/config/:/etc/selenoid/:ro \
           aerokube/selenoid:latest-release
 
-      - name: Run Selenoid UI
-        run: |
-          docker run -d --name selenoid_ui \
-          -p 8080:8080 |
-          aerokube/selenoid-ui \
-          --selenoid-uri http://$HOST:4444
+#      - name: Run Selenoid UI
+#        run: |
+#          docker run -d --name selenoid_ui \
+#          -p 8080:8080 |
+#          aerokube/selenoid-ui \
+#          --selenoid-uri http://$HOST:4444
 
       - name: Run TeamCity Server
         run: |
