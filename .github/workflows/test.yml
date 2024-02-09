@@ -54,14 +54,6 @@ jobs:
       - name: Set up TeamCity
         run: mvn clean test -Dtest=SetupTest#startUpTest
 
-#       Step for debug
-#      - name: Archive test artifacts
-#        uses: actions/upload-artifact@v4
-#        with:
-#          name: test-results
-#          path: |
-#            target/surefire-reports
-
       - name: Set up superUserToken environment variable
         run: echo "SUPER_USER_TOKEN=$(docker logs teamcity-server | grep 'Super user authentication token' | tail -n 1 | awk '{print $6}')" >> $GITHUB_ENV
 
@@ -76,6 +68,13 @@ jobs:
 
       - name: Set up TeamCity agent
         run: mvn test -Dtest=SetupTest#setupTeamCityAgentTest
+#     Step for debug
+      - name: Archive test artifacts
+        uses: actions/upload-artifact@v4
+        with:
+          name: test-results
+          path: |
+            target/surefire-reports
 
       - name: Run UI tests
         run: mvn test -DsuiteXmlFile=testng-suites/ui-suites.xml

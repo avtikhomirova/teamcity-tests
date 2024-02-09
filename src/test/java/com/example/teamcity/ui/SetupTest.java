@@ -32,7 +32,6 @@ public class SetupTest extends BaseUiTest{
         //get the list of unauthorized agents
         var allUnauthorizedAgents = new CheckedAgents(Specifications.getSpec().authSpec(testData.getUser()))
                 .getAllUnauthorizedAgents();
-
         //make agent authorized
         var unauthorizedAgents = allUnauthorizedAgents.getAgent();
         softy.assertThat(unauthorizedAgents.size()).isGreaterThan(0);
