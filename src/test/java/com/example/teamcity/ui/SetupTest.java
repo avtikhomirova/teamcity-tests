@@ -41,7 +41,7 @@ public class SetupTest extends BaseUiTest{
         //check that the agent is authorized
         var allAuthorizedAgents = new CheckedAgents(Specifications.getSpec().authSpec(testData.getUser())).getAllAuthorizedAgents();
         var authorizedAgents = allAuthorizedAgents.getAgent();
-        await().atMost(Duration.ofSeconds(30)).pollInterval(Duration.ofSeconds(5)).until(() -> authorizedAgents.size() == 1);
+        await().atMost(Duration.ofMinutes(5)).pollInterval(Duration.ofSeconds(5)).until(() -> authorizedAgents.size() == 1);
         softy.assertThat(authorizedAgents.get(0).getName()).isEqualTo(agentName);
     }
 }

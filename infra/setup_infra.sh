@@ -100,8 +100,8 @@ cd $teamcity_test_directory
 echo "host=$ip:8111\nsuperUserToken=$superuser_token\nremote=http://$ip:4444/wd/hub\nbrowser=chrome" > $teamcity_test_directory/src/main/resources/config.properties
 cat $teamcity_test_directory/src/main/resources/config.properties
 
-#echo "Run API tests"
-#mvn test -DsuiteXmlFile=testng-suites/api-suites.xml
-#
-#echo "Run UI tests"
-#mvn test -DsuiteXmlFile=testng-suites/ui-suites.xml
+echo "Run API tests"
+mvn test -DsuiteXmlFile=testng-suites/api-suites.xml
+
+echo "Run UI tests"
+mvn test -DsuiteXmlFile=testng-suites/ui-suites.xml
