@@ -35,7 +35,7 @@ jobs:
           -p 4444:4444 \
           aerokube/selenoid
       - name: Pull Selenoid Firefox
-        run: docker pull selenoid/vnc:firefox_114.0
+        run: docker pull selenoid/vnc:firefox_89.0
 
       - name: Setup config browsers
         run: echo -e "browser=firefox\nremote=http://localhost:4444/wd/hub" >> src/main/resources/config.properties
