@@ -28,19 +28,22 @@ public class SetupTest extends BaseUiTest{
         var testData = testDataStorage.addTestData();
         checkedWithSuperUser.getUserRequest()
                 .create(testData.getUser());
-
+        var checkedAgents = new CheckedAgents(Specifications.getSpec().authSpec(testData.getUser()));
+        await().atMost(Duration.ofMinutes(5)).pollInterval(Duration.ofSeconds(5)).until(() -> !checkedAgents.getAllUnauthorizedAgents().getAgent().isEmpty());
         //get the list of unauthorized agents
-        var allUnauthorizedAgents = new CheckedAgents(Specifications.getSpec().authSpec(testData.getUser()))
+        var allUnauthorizedAgents = checkedAgents
                 .getAllUnauthorizedAgents();
         //make agent authorized
         var unauthorizedAgents = allUnauthorizedAgents.getAgent();
         softy.assertThat(unauthorizedAgents.size()).isGreaterThan(0);
-        var agentName = new CheckedAgents(Specifications.getSpec().authSpec(testData.getUser())).updateAgentAuthorizationToTrue(unauthorizedAgents.get(0).getName());
+        String agentName = unauthorizedAgents.get(0).getName();
+        checkedAgents.updateAgentAuthorizationToTrue(agentName);
 
         //check that the agent is authorized
-        var allAuthorizedAgents = new CheckedAgents(Specifications.getSpec().authSpec(testData.getUser())).getAllAuthorizedAgents();
+        await().atMost(Duration.ofMinutes(5)).pollInterval(Duration.ofSeconds(5)).until(() -> !checkedAgents.getAllAuthorizedAgents().getAgent().isEmpty());
+        var allAuthorizedAgents = checkedAgents.getAllAuthorizedAgents();
         var authorizedAgents = allAuthorizedAgents.getAgent();
-        await().atMost(Duration.ofMinutes(5)).pollInterval(Duration.ofSeconds(5)).until(() -> authorizedAgents.size() == 1);
+
         softy.assertThat(authorizedAgents.get(0).getName()).isEqualTo(agentName);
     }
 }
