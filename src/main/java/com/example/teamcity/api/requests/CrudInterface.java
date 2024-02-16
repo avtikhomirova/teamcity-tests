@@ -5,7 +5,7 @@ public interface CrudInterface {
 
     public Object get(String id);
 
-    public Object update(Object obj);
+    public Object update(String id, Object obj);
 
     public Object delete(String id);
 }

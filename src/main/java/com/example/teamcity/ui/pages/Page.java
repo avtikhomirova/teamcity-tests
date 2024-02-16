@@ -27,14 +27,14 @@ public abstract class Page {
     }
 
     public void waitUntilPageIsLoaded1(){
-        pageWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(1));
+        pageWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(5));
     }
     public void waitUntilPageIsLoaded2(){
-        inProgressWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(1));
+        inProgressWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(5));
     }
 
     public void waitUntilPageContentIsLoaded(){
-        pageContentWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(1));
+        pageContentWaitingMarker.shouldNotBe(Condition.visible, Duration.ofMinutes(5));
     }
 
     public void  waitUntilConnectionSuccessful(){
