@@ -110,8 +110,10 @@ jobs:
 
       - name: Install Swagger Coverage Command Line
         run: |
+          pwd
+          mkdir -p .swagger-coverage-commandline
           wget "https://github.com/viclovsky/swagger-coverage/releases/download/1.5.0/swagger-coverage-1.5.0.zip" -O swagger-coverage-commandline.zip
-          unzip swagger-coverage-commandline.zip -d ${pwd}/swagger-coverage-commandline
+          unzip swagger-coverage-commandline.zip -d .swagger-coverage-commandline
 
       # Создание репорта с покрытием API тестов, основанного на Swagger. Документация: https://github.com/viclovsky/swagger-coverage
       - name: Run Swagger coverage
