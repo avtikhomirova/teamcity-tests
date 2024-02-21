@@ -4,12 +4,10 @@ import com.example.teamcity.api.models.Agents;
 import com.example.teamcity.api.requests.CrudInterface;
 import com.example.teamcity.api.requests.Request;
 import com.example.teamcity.api.requests.unchecked.UncheckedAgents;
-import io.restassured.response.Response;
 import io.restassured.response.ValidatableResponse;
 import io.restassured.specification.RequestSpecification;
 import org.apache.http.HttpStatus;
 
-import static io.restassured.RestAssured.given;
 
 public class CheckedAgents extends Request implements CrudInterface {
     public CheckedAgents(RequestSpecification spec) {

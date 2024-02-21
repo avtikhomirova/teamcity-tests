@@ -1,1 +1,0 @@
-[2024-02-09 10:26:58,137]   INFO -  (02:40:51, global_settings) 1 - [3861633ms] SQL SELECT: select id, task_type, description, stage, node_id, created, updated from config_persisting_tasks where task_type = ? and stage in (?,?,?) order by id limit 1 | PARAMETERS: "global_settings", 1, 2, 6
